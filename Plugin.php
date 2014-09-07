@@ -60,6 +60,9 @@ class SCS_Plugin implements Typecho_Plugin_Interface
 
         $secretkey = new Typecho_Widget_Helper_Form_Element_Text('secretkey', null, null, _t('SecretKey：'));
         $form->addInput($secretkey->addRule('required', _t('请填写SecretKey！')));
+
+        $format = new Typecho_Widget_Helper_Form_Element_Text('format', null, null, _t('自定义SCS路径: '),  _t('自定义附件上传至SCS的路径，默认为 "年份/月份/" 格式. 也可自行输入类似 "a目录/b目录/c目录" 等样式风格(最前面不要加斜杠"/").'));
+        $form->addInput($format->addRule('xssCheck', _t('请填写正确的format格式！')));
     }
 	
 	
@@ -153,8 +156,10 @@ class SCS_Plugin implements Typecho_Plugin_Interface
 		
         $option = self::getSCSconfig();
         $date = new Typecho_Date(Typecho_Widget::widget('Widget_Options')->gmtTime);
-		
-        $path = $date->year .'/'. $date->month . '/';
+		if( $option->format == null )
+			$path = $date->year .'/'. $date->month . '/';
+		else
+			$path = $option->format;
 		/*非必须(在本地附件目录/usr/uploads/下创建新目录)
         if (!is_dir($path)) {
             if (!self::makeUploadDir($path)) {
