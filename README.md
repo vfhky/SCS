@@ -1,0 +1,4 @@
+SCS
+===
+
+SCS for Typecho
