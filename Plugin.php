@@ -4,7 +4,7 @@
  * 
  * @package     SCS
  * @author 		vfhky
- * @version 	1.0.2
+ * @version 	1.0.3
  * @update: 	2014.09.07
  * @link 		http://www.typecodes.com/web/scsfortypecho.html
  */
@@ -61,7 +61,7 @@ class SCS_Plugin implements Typecho_Plugin_Interface
         $secretkey = new Typecho_Widget_Helper_Form_Element_Text('secretkey', null, null, _t('SecretKey：'));
         $form->addInput($secretkey->addRule('required', _t('请填写SecretKey！')));
 
-        $format = new Typecho_Widget_Helper_Form_Element_Text('format', null, null, _t('自定义SCS路径: '),  _t('自定义附件上传至SCS的路径，默认为 "年份/月份/" 格式。也可自行输入类似 "a目录/b目录/c目录" 等样式风格(最前面不要加斜杠"/")。'));
+        $format = new Typecho_Widget_Helper_Form_Element_Text('format', null, null, _t('自定义SCS路径: '),  _t('自定义附件上传至SCS的路径，默认为 "年份/月份/" 格式。也可自行输入类似 "a目录/b目录/c目录/" 等样式风格(最前面不要加斜杠"/"，末尾要加)。'));
         $form->addInput($format->addRule('xssCheck', _t('请填写正确的format格式！')));
     }
 	
