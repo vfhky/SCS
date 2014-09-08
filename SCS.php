@@ -97,8 +97,7 @@ class SCS
 	 * @access public
 	 * @static
 	 */
-	//public static $useExceptions = false;
-	public static $useExceptions = true;
+	public static $useExceptions = false;
 
 	/**
 	 * Time offset applied to time()
@@ -1340,8 +1339,6 @@ class SCS
 		return sprintf(($https ? 'https' : 'http').'://%s/%s?' . ($ip ? 'ip=' . $ip . '&' : '') . 'KID=%s&Expires=%u&ssig=%s',
 		$hostBucket ? $bucket : self::$endpoint.'/'.$bucket, $uri, 'sina,' . self::$__accessKey, $expires,
 		urlencode(self::__getHash("{$verb}\n\n{$content_type}\n{$expires}\n/{$bucket}/{$uri}" . ($ip ? '?ip=' . $ip : ''))));
-		//http://sinastorage.cn/typecodes/11.png?KID=sina,k3ke9fHcgOHNIKowXKDi&Expires=1496460191&ssig=xWiWas6ldD
-		//http://sinastorage.cn/typecodes/11.png?KID=sina,k3ke9fHcgOHNIKowXKDi&Expires=1496460643&ssig=sA8sx6bP%2B9 
 	}
 	
 
