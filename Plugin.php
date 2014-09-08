@@ -4,7 +4,7 @@
  * 
  * @package     SCS
  * @author 		vfhky
- * @version 	1.0.3
+ * @version 	1.0.4
  * @update: 	2014.09.07
  * @link 		http://www.typecodes.com/web/scsfortypecho.html
  */
