@@ -4,9 +4,9 @@
  * 
  * @package     SCS
  * @author 		vfhky
- * @version 	1.0.4
- * @update: 	2014.09.07
- * @link 		http://www.typecodes.com/web/scsfortypecho.html
+ * @version 	1.1.0
+ * @update: 	2014.09.12
+ * @link 		http://www.typecodes.com/web/scsfortypechov110.html
  */
 
 class SCS_Plugin implements Typecho_Plugin_Interface
@@ -52,17 +52,20 @@ class SCS_Plugin implements Typecho_Plugin_Interface
      */
     public static function config(Typecho_Widget_Helper_Form $form)
     {
-        $bucket = new Typecho_Widget_Helper_Form_Element_Text('bucket', null, null, _t('Bucket 名称：'));
+        $bucket = new Typecho_Widget_Helper_Form_Element_Text('bucket', null, null, _t('Bucket 名称(*)：'));
         $form->addInput($bucket->addRule('required', _t('请填写Bucket的名称！')));
-
-        $accesskey = new Typecho_Widget_Helper_Form_Element_Text('accesskey', null, null, _t('AccessKey：'));
+		
+        $accesskey = new Typecho_Widget_Helper_Form_Element_Text('accesskey', null, null, _t('AccessKey(*)：'));
         $form->addInput($accesskey->addRule('required', _t('请填写AccessKey！')));
-
-        $secretkey = new Typecho_Widget_Helper_Form_Element_Text('secretkey', null, null, _t('SecretKey：'));
+		
+        $secretkey = new Typecho_Widget_Helper_Form_Element_Text('secretkey', null, null, _t('SecretKey(*)：'));
         $form->addInput($secretkey->addRule('required', _t('请填写SecretKey！')));
-
-        $format = new Typecho_Widget_Helper_Form_Element_Text('format', null, null, _t('自定义SCS路径: '),  _t('自定义附件上传至SCS的路径，默认为 "年份/月份/" 格式。也可自行输入类似 "a目录/b目录/c目录/" 等样式风格(最前面不要加斜杠"/"，末尾要加)。'));
-        $form->addInput($format->addRule('xssCheck', _t('请填写正确的format格式！')));
+		
+        $scsbind = new Typecho_Widget_Helper_Form_Element_Text('scsbind', null, null, _t('SCS绑定的域名: '),  _t('非必填，有则填写SCS上绑定的域名。'));
+        $form->addInput($scsbind->addRule('xssCheck', _t('请填写正确的SCS域名格式！')));
+		
+        $format = new Typecho_Widget_Helper_Form_Element_Text('format', null, null, _t('自定义SCS路径: '),  _t('非必填，自定义附件上传至SCS的路径，默认为 "年份/月份/" 格式，也可自行输入类似 "a目录/b目录/c目录/" 等样式风格。'));
+        $form->addInput($format->addRule('xssCheck', _t('请填写正确的SCS路径格式！')));
     }
 	
 	
@@ -91,6 +94,7 @@ class SCS_Plugin implements Typecho_Plugin_Interface
         return Typecho_Widget::widget('Widget_Options')->plugin('SCS');
     }
 	
+	
     /**
      * 获取SCS的SDK类
      * 
@@ -103,6 +107,25 @@ class SCS_Plugin implements Typecho_Plugin_Interface
     {
         if( !class_exists('SCS') )
 			require_once 'SCS.php';
+    }
+	
+	
+	/**
+     * 自定义SCS路径的检验 
+     * 
+     * @param string $filepath 
+     * @static
+     * @access private
+     * @return string
+     */
+    private static function getSCSFilepath($filepath)
+    {
+        $filepath = str_replace( array("\\", "//" ), '/', htmlspecialchars($filepath) );
+		if( substr( $filepath, 0, 1 ) === '/' )
+			$filepath = substr($filepath, 1);
+		if( substr( $filepath, -1, 1 ) !== '/' )
+			$filepath .= '/';
+		return $filepath;
     }
 	
 	
@@ -156,7 +179,7 @@ class SCS_Plugin implements Typecho_Plugin_Interface
 		
         $option = self::getSCSconfig();
         $date = new Typecho_Date(Typecho_Widget::widget('Widget_Options')->gmtTime);
-		$path = ($option->format == null)?($date->year .'/'. $date->month . '/'):(htmlspecialchars($option->format));
+		$path = ($option->format == null)?($date->year .'/'. $date->month . '/'):(self::getSCSFilepath($option->format));
 		/*非必须(在本地附件目录/usr/uploads/下创建新目录)
         if (!is_dir($path)) {
             if (!self::makeUploadDir($path)) {
@@ -252,8 +275,12 @@ class SCS_Plugin implements Typecho_Plugin_Interface
     public static function attachmentHandle(array $content)
     {
         $option = self::getSCSconfig();
-        self::getSCSsdk();
-		$scs = new SCS( $option->accesskey, $option->secretkey );
-		return $scs->getAuthenticatedURL($option->bucket, $content['attachment']->path, 86400000);
+		if( $option->scsbind == null )
+		{
+			self::getSCSsdk();
+			return Typecho_Common::url($content['attachment']->path, SCS::$endpoint.'/'.$option->bucket.'/' );
+		}
+		else
+			return Typecho_Common::url($content['attachment']->path, $option->scsbind );
     }
 }
