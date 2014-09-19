@@ -21,5 +21,11 @@
     3、新增SCS域名绑定功能，用户可以自由选择是否使用该功能；
     4、优化文章上传后附件显示的路径，更为简洁。
 
-本版本详细说明：[更新新浪云存储(SCS) for Typecho 插件版本V1.0.0](http://www.typecodes.com/web/scsfortypechov110.html '更新新浪云存储(SCS) for Typecho 插件版本V1.0.0')。
+本版本详细说明：[更新新浪云存储(SCS) for Typecho 插件版本V1.1.0](http://www.typecodes.com/web/scsfortypechov110.html '更新新浪云存储(SCS) for Typecho 插件版本V1.1.0')。
+
+##### 2.3 版本v1.1.1 (2014.09.20)
+    1、更新官方SDK文件；
+    2、增加SCS存储路径参数配置，用户能更自由定义SCS存储路径；
+
+本版本详细说明：[更新新浪云存储(SCS) for Typecho 插件版本V1.1.1](http://www.typecodes.com/web/scsfortypechov111.html '更新新浪云存储(SCS) for Typecho 插件版本V1.1.1')。
 

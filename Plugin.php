@@ -4,9 +4,9 @@
  * 
  * @package     SCS
  * @author 		vfhky
- * @version 	1.1.0
- * @update: 	2014.09.12
- * @link 		http://www.typecodes.com/web/scsfortypechov110.html
+ * @version 	1.1.1
+ * @update: 	2014.09.20
+ * @link 		http://www.typecodes.com/web/scsfortypechov111.html
  */
 
 class SCS_Plugin implements Typecho_Plugin_Interface
@@ -53,19 +53,20 @@ class SCS_Plugin implements Typecho_Plugin_Interface
     public static function config(Typecho_Widget_Helper_Form $form)
     {
         $bucket = new Typecho_Widget_Helper_Form_Element_Text('bucket', null, null, _t('Bucket 名称(*)：'));
-        $form->addInput($bucket->addRule('required', _t('请填写Bucket的名称！')));
+        $form->addInput($bucket->addRule('required', _t('Bucket名称不能为空！')));
 		
         $accesskey = new Typecho_Widget_Helper_Form_Element_Text('accesskey', null, null, _t('AccessKey(*)：'));
-        $form->addInput($accesskey->addRule('required', _t('请填写AccessKey！')));
+        $form->addInput($accesskey->addRule('required', _t('AccessKey不能为空！')));
 		
         $secretkey = new Typecho_Widget_Helper_Form_Element_Text('secretkey', null, null, _t('SecretKey(*)：'));
-        $form->addInput($secretkey->addRule('required', _t('请填写SecretKey！')));
+        $form->addInput($secretkey->addRule('required', _t('SecretKey不能为空！')));
 		
         $scsbind = new Typecho_Widget_Helper_Form_Element_Text('scsbind', null, null, _t('SCS绑定的域名: '),  _t('非必填，有则填写SCS上绑定的域名。'));
-        $form->addInput($scsbind->addRule('xssCheck', _t('请填写正确的SCS域名格式！')));
+        $form->addInput($scsbind->addRule('xssCheck', _t('SCS域名格式不正确！')));
 		
-        $format = new Typecho_Widget_Helper_Form_Element_Text('format', null, null, _t('自定义SCS路径: '),  _t('非必填，自定义附件上传至SCS的路径，默认为 "年份/月份/" 格式，也可自行输入类似 "a目录/b目录/c目录/" 等样式风格。'));
-        $form->addInput($format->addRule('xssCheck', _t('请填写正确的SCS路径格式！')));
+        $format = new Typecho_Widget_Helper_Form_Element_Text('format', null, null, _t('自定义SCS路径: '),  _t('非必填，SCS存储路径。可用参数: {year}年份，{month}月份，{dayday}天数。默认为 "年份/月份/" 即 {year}/{month} 格式，也可自行输入类似 "{year}/a目录/b目录/{month}/" 等样式风格。'));
+        $form->addInput($format->addRule('xssCheck', _t('SCS路径格式不正确！')));
+		//必填则$form->addInput($format->addRule('required', _t('SCS路径不能为空！'))->addRule('xssCheck', _t('SCS路径格式不正确！')));
     }
 	
 	
@@ -179,7 +180,9 @@ class SCS_Plugin implements Typecho_Plugin_Interface
 		
         $option = self::getSCSconfig();
         $date = new Typecho_Date(Typecho_Widget::widget('Widget_Options')->gmtTime);
-		$path = ($option->format == null)?($date->year .'/'. $date->month . '/'):(self::getSCSFilepath($option->format));
+		$path = ($option->format == null)?($date->year .'/'. $date->month . '/'):(preg_replace(array('/\{year\}/', '/\{month\}/', '/\{day\}/'), array( $date->year, $date->month, $date->day ), self::getSCSFilepath($option->format)));
+		
+		
 		/*非必须(在本地附件目录/usr/uploads/下创建新目录)
         if (!is_dir($path)) {
             if (!self::makeUploadDir($path)) {
