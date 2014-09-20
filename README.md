@@ -26,6 +26,7 @@
 ##### 2.3 版本v1.1.1 (2014.09.20)
     1、更新官方SDK文件；
     2、增加SCS存储路径参数配置，用户能更自由定义SCS存储路径；
+    3、取消SCS附件的Unix time stamp格式的名称，以原附件名称替代。
 
 本版本详细说明：[更新新浪云存储(SCS) for Typecho 插件版本V1.1.1](http://www.typecodes.com/web/scsfortypechov111.html '更新新浪云存储(SCS) for Typecho 插件版本V1.1.1')。
 

@@ -107,7 +107,7 @@ class SCS_Plugin implements Typecho_Plugin_Interface
     public static function getSCSsdk()
     {
         if( !class_exists('SCS') )
-			require_once 'SCS.php';
+			require 'SCS.php';
     }
 	
 	
@@ -174,6 +174,8 @@ class SCS_Plugin implements Typecho_Plugin_Interface
     {
         if( empty($file['name']) )
 			return false;
+		
+		//获取安全的文件名后缀
 		$ext = self::getSafeName($file['name']);
         if( !Widget_Upload::checkFileType($ext) )
 			return false;
@@ -190,7 +192,8 @@ class SCS_Plugin implements Typecho_Plugin_Interface
             }
         }
 		*/
-        $path .= sprintf('%u', crc32(uniqid())) . '.' . $ext;
+        //以Unix time stamp形式储存：$path .= sprintf('%u', crc32(uniqid())) . '.' . $ext;
+		$path .= $file['name'];
 		
         if( isset($content) )
         {
