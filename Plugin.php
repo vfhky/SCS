@@ -64,7 +64,7 @@ class SCS_Plugin implements Typecho_Plugin_Interface
         $scsbind = new Typecho_Widget_Helper_Form_Element_Text('scsbind', null, null, _t('SCS绑定的域名: '),  _t('非必填，有则填写SCS上绑定的域名。'));
         $form->addInput($scsbind->addRule('xssCheck', _t('SCS域名格式不正确！')));
 		
-        $format = new Typecho_Widget_Helper_Form_Element_Text('format', null, null, _t('自定义SCS路径: '),  _t('非必填，SCS存储路径。可用参数: {year}年份，{month}月份，{dayday}天数。默认为 "年份/月份/" 即 {year}/{month} 格式，也可自行输入类似 "{year}/a目录/b目录/{month}/" 等样式风格。'));
+        $format = new Typecho_Widget_Helper_Form_Element_Text('format', null, null, _t('自定义SCS路径: '),  _t('非必填，SCS存储路径。可用参数: {year}年份，{month}月份，{day}天数。默认为 "年份/月份/" 即 {year}/{month} 格式，也可自行输入类似 "{year}/a目录/b目录/{month}/" 等样式风格。'));
         $form->addInput($format->addRule('xssCheck', _t('SCS路径格式不正确！')));
 		//必填则$form->addInput($format->addRule('required', _t('SCS路径不能为空！'))->addRule('xssCheck', _t('SCS路径格式不正确！')));
     }
